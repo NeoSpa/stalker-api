@@ -1,0 +1,24 @@
+{
+  "name": "stalker-api",
+  "version": "1.0.0",
+  "description": "Proxy Scrapper for Stalker App",
+  "main": "app.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NeoSpa/stalker-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NeoSpa/stalker-api/issues"
+  },
+  "homepage": "https://github.com/NeoSpa/stalker-api#readme"
+}
