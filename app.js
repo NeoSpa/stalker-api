@@ -3,43 +3,37 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const app = express();
 const port = 666;
+const { config } = require('dotenv');
+const filterEmails = require('./filters/emails');
 
-function filterEmails(rawText, terms) {
-    return rawText.match(/(3*[a-zA-Z0-9]+[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+)/gi).reduce((uniq, item) => {
-        return uniq.includes(item) ? uniq : [...uniq, item]
-    }, []).filter((email) => email.includes(terms));
-}
+const env = config().parsed;
 
 app.get('/google', (req, res) => {
-    const { terms, page } = req.query;
-    axios.get('https://www.startpage.com/sp/search', {
-        data: `query=%40%22${terms}%22&language=english&lui=english&cat=web&sc=vsucL4DHGoY810&abp=${page}`,
-        timeout: 0,
+    const { terms, num } = req.query;
+
+    axios.get(`https://api.goog.io/v1/search/q=%40"${terms}"&lang_pt&cr=BR&num=${num}`, {
         headers: {
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0',
-            'Referrer': 'https://www.startpage.com/',
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'apikey': env.GOOGIO,
         }
-    }).then((a) => {
-        console.log('entrei garaio');
-        const $ = cheerio.load(a.data);
-        const rawText = $('.w-gl__result').find('p').text();
-        console.log();
-        res.send(a.data);
-    })
-    .catch((e) => {
-        res.send(e);
-    });
-}).get('/googio', (req, res) => {
-    axios.get('https://api.goog.io/v1/search/?q=ufmg', {
-        headers: {
-            'apikey': 'c63e0778-bc8e-410b-9ad9-70208fe9e5c0',
-        }
-    }).then((data) => {
-        res.send(data)
+
+    }).then(async (searchResults) => {
+        const rawText = await searchResults.data.results.map(({ description }) => description).join();
+        const filteredResult = filterEmails(await rawText, terms)
+
+        res.send({
+            results: filteredResult,
+            count: filteredResult.length,
+            error: false,
+        });
+
+    }).catch((e) => {        
+        res.send({
+            results: [],
+            count: 0,
+            error: true,
+        });
     }) 
-});
+})
 
 
 
