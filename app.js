@@ -12,7 +12,7 @@ function filterEmails(rawText, terms) {
 
 app.get('/google', (req, res) => {
     const { terms, page } = req.query;
-    axios.post('https://www.startpage.com/sp/search', {
+    axios.get('https://www.startpage.com/sp/search', {
         data: `query=%40%22${terms}%22&language=english&lui=english&cat=web&sc=vsucL4DHGoY810&abp=${page}`,
         timeout: 0,
         headers: {
@@ -31,7 +31,17 @@ app.get('/google', (req, res) => {
     .catch((e) => {
         res.send(e);
     });
+}).get('/googio', (req, res) => {
+    axios.get('https://api.goog.io/v1/search/?q=ufmg', {
+        headers: {
+            'apikey': 'c63e0778-bc8e-410b-9ad9-70208fe9e5c0',
+        }
+    }).then((data) => {
+        res.send(data)
+    }) 
 });
+
+
 
 app.listen(port, () => {
     console.log('listening at:', port);
