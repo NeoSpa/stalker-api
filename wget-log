@@ -1,0 +1,11 @@
+--2020-11-15 20:59:39--  https://www.google.com.br/search?num=100
+Resolving www.google.com.br (www.google.com.br)... 172.217.28.67, 2800:3f0:4001:819::2003
+Connecting to www.google.com.br (www.google.com.br)|172.217.28.67|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://www.google.com/sorry/index?continue=https://www.google.com.br/search%3Fnum%3D100&q=EgSq_sICGOuBx_0FIhkA8aeDSwdO4f4xV7xc4KRHjBLWkUK7Y8oYMgFy [following]
+--2020-11-15 20:59:40--  https://www.google.com/sorry/index?continue=https://www.google.com.br/search%3Fnum%3D100&q=EgSq_sICGOuBx_0FIhkA8aeDSwdO4f4xV7xc4KRHjBLWkUK7Y8oYMgFy
+Resolving www.google.com (www.google.com)... 172.217.173.68, 172.217.29.164, 2800:3f0:4001:819::2004
+Connecting to www.google.com (www.google.com)|172.217.173.68|:443... connected.
+HTTP request sent, awaiting response... 429 Too Many Requests
+2020-11-15 20:59:40 ERROR 429: Too Many Requests.
+
