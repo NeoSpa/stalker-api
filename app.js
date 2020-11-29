@@ -1,38 +1,29 @@
 const express = require('express');
-const axios = require('axios');
-const cheerio = require('cheerio');
 const app = express();
 const port = 666;
 const { config } = require('dotenv');
-const filterEmails = require('./filters/emails');
+const googleScrapper = require('./scrappers/google');
 
 const env = config().parsed;
 
-app.get('/google', (req, res) => {
-    const { terms, num } = req.query;
+app.get('/google', async (req, res) => {
+    const { terms, pages = 1 } = req.query;
+    let results = [];
 
-    axios.get(`https://api.goog.io/v1/search/q=%40"${terms}"&lang_pt&cr=BR&num=${num}`, {
-        headers: {
-            'apikey': env.GOOGIO,
-        }
-
-    }).then(async (searchResults) => {
-        const rawText = await searchResults.data.results.map(({ description }) => description).join();
-        const filteredResult = filterEmails(await rawText, terms)
-
-        res.send({
-            results: filteredResult,
-            count: filteredResult.length,
-            error: false,
+    for (let start = 1; start <= pages; start++) {
+        await googleScrapper(env.GOOGIO, terms, start, (filteredResults) => {
+            results = [...results, ...filteredResults];
         });
+    }
 
-    }).catch((e) => {        
-        res.send({
-            results: [],
-            count: 0,
-            error: true,
-        });
-    }) 
+    results = results.reduce((uniq, item) => {
+        return uniq.includes(item) ? uniq : [...uniq, item]
+    }, []);
+    
+    res.send({
+        results,
+        count: results.length,
+    });
 })
 
 

@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "jest",
-    "server": "node app.js"
+    "server": "sudo node app.js"
   },
   "repository": {
     "type": "git",
